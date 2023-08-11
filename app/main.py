@@ -13,12 +13,15 @@ data = {
 }
 df = pd.DataFrame(data)
 
+# Load Jinja2 templates
+templates = Jinja2Templates(directory="templates")
+
 # FastAPI route to retrieve data
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 async def read_root(request: Request):
     # Render the HTML template with the data from the dataframe
-    return templates.TemplateResponse("index.html", {"request": request, "data": df.to_dict(orient='records')})
-
+    #return templates.TemplateResponse("base.html", {"request": request, "data": df.to_dict(orient='records')})
+     return df.to_dict(orient='records')
 # FastAPI route to post data
 @app.post("/post_data")
 async def post_data(name: str = Form(...), age: int = Form(...), city: str = Form(...)):
@@ -28,5 +31,4 @@ async def post_data(name: str = Form(...), age: int = Form(...), city: str = For
     df = df.append(new_row, ignore_index=True)
     return {"message": "Data posted successfully"}
 
-# Load Jinja2 templates
-templates = Jinja2Templates(directory="templates")
+
